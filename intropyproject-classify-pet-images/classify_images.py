@@ -2,8 +2,8 @@
 # -*- coding: utf-8 -*-
 # */AIPND-revision/intropyproject-classify-pet-images/classify_images.py
 #                                                                             
-# PROGRAMMER: 
-# DATE CREATED:                                 
+# PROGRAMMER: Margaret Gathoni
+# DATE CREATED: 11th July 2023                                
 # REVISED DATE: 
 # PURPOSE: Create a function classify_images that uses the classifier function 
 #          to create the classifier labels and then compares the classifier 
@@ -29,7 +29,7 @@ from classifier import classifier
 #       results_dic dictionary that is passed into the function is a mutable 
 #       data type so no return is needed.
 # 
-def classify_images(images_dir, results_dic, model):
+def classify_images(images_dir, my_sol_dic, model):
     """
     Creates classifier labels with classifier function, compares pet labels to 
     the classifier labels, and adds the classifier label and the comparison of 
@@ -65,4 +65,23 @@ def classify_images(images_dir, results_dic, model):
      Returns:
            None - results_dic is mutable data type so no return needed.         
     """
-    None 
+    my_sol_dic = {}
+   for a in mypet_dic:
+        my_model = classifier(images_dir + a, model)
+        my_model = my_model.lower().strip()
+        dog = mypet_dic[key]
+        present = my_model.find(dog)
+        
+        if present >= 0:
+            if (present == 0 and len(dog) == len(my_model)) or \
+               ((present == 0 or my_model[present - 1] == " ") and
+                (present + len(dog) == len(my_model) or my_model[present + len(dog): present+len(dog)+1] in (",", " "))):
+
+                my_sol_dic[a] = [dog, my_model, 1] if a not in my_sol_dic else my_sol_dic[a]
+            else:
+                my_sol_dic[a] = [dog, my_model, 0] if a not in my_sol_dic else my_sol_dic[a]
+        else:
+            my_sol_dic[a] = [dog, my_model, 0] if a not in my_sol_dic else my_sol_dic[a]
+    
+    # Return results dictionary
+    return my_sol_dic
