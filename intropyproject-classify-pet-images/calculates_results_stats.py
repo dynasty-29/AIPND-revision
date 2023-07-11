@@ -2,8 +2,8 @@
 # -*- coding: utf-8 -*-
 # */AIPND-revision/intropyproject-classify-pet-images/calculates_results_stats.py
 #                                                                             
-# PROGRAMMER:
-# DATE CREATED:                                  
+# PROGRAMMER:Margaret Gathoni
+# DATE CREATED:    11th July 2023                              
 # REVISED DATE: 
 # PURPOSE: Create a function calculates_results_stats that calculates the 
 #          statistics of the results of the programrun using the classifier's model 
@@ -42,7 +42,8 @@
 #       in the return statement with the results_stats_dic dictionary that you create 
 #       with this function
 # 
-def calculates_results_stats(results_dic):
+def calculates_results_stats(my_sol_dic):
+    
     """
     Calculates statistics of the results of the program run using classifier's model 
     architecture to classifying pet images. Then puts the results statistics in a 
@@ -65,9 +66,46 @@ def calculates_results_stats(results_dic):
                     a percentage or a count) where the key is the statistic's 
                      name (starting with 'pct' for percentage or 'n' for count)
                      and the value is the statistic's value. See comments above
-                     and the classroom Item XX Calculating Results for details
+                     and the previous topic Calculating Results in the class for details
                      on how to calculate the counts and statistics.
     """        
     # Replace None with the results_stats_dic dictionary that you created with 
     # this function 
-    return None
+  
+    sol_stats = {
+        'n_dogs_img': 0,
+        'n_match': 0,
+        'n_correct_dogs': 0,
+        'n_correct_notdogs': 0,
+        'n_correct_breed': 0,
+        'n_images': len(my_sol_dic),
+        'n_notdogs_img': 0,
+        'pct_match': 0.0,
+        'pct_correct_dogs': 0.0,
+        'pct_correct_breed': 0.0,
+        'pct_correct_notdogs': 0.0
+    }
+
+    for e in my_sol_dic:
+        if my_sol_dic[e][2] == 1:
+            sol_stats['n_match'] += 1
+        if sum(my_sol_dic[e][2:]) == 3:
+            sol_stats['n_correct_breed'] += 1
+        if my_sol_dic[e][3] == 1:
+            sol_stats['n_dogs_img'] += 1
+        if my_sol_dic[e][4] == 1:
+           sol_stats['n_correct_dogs'] += 1
+        else:
+            if my_sol_dic[e][4] == 0:
+                sol_stats['n_correct_notdogs'] += 1
+
+    sol_stats['n_notdogs_img'] = sol_stats['n_images'] - sol_stats['n_dogs_img']
+    sol_stats['pct_match'] = (sol_stats['n_match'] / sol_stats['n_images']) * 100.0
+    sol_stats['pct_correct_dogs'] = (sol_stats['n_correct_dogs'] / sol_stats['n_dogs_img']) * 100.0
+    sol_stats['pct_correct_breed'] = (sol_stats['n_correct_breed'] / sol_stats['n_dogs_img']) * 100.0
+
+    if sol_stats['n_notdogs_img'] > 0:
+        sol_stats['pct_correct_notdogs'] = (sol_stats['n_correct_notdogs'] / sol_stats['n_notdogs_img']) * 100.0
+
+    return sol_stats
+
